@@ -6,13 +6,14 @@ import re
 from queue import Queue
 
 
+class ActivityPath:
+    SETTINGS_ACTIVITY_PATH = "com.android.settings/com.android.settings.Settings"
+
+
 class Driver:
     def __init__(self, host='127.0.0.1', port=5037):
         client = Client(host, port)
         self.waitForDevice()
-
-        self.SETTINGS_ACTIVITY_PATH = "com.android.settings/com.android.settings.Settings"
-
         self.devices = client.devices()
         print('Driver@__init__: start driver')
 
@@ -96,6 +97,17 @@ class Driver:
 
     def dumpstate(self):            # 개발 전
         print('Driver@dumpstate: dumpstate start')
+        
+    def sleep(self, time=0.1):
+        print('Driver@sleep: sleep ' + str(time))
+        for device in self.devices:
+            device.shell('sleep ' + str(time))
+
+    def sendKey(self, key=""):
+        print('Driver@sendKey: send ' + key)
+        for device in self.devices:
+            device.shell('input text ' + key)
+
 
 
 
