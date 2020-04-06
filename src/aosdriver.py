@@ -92,12 +92,41 @@ class Driver:
         for device in self.devices:
             device.shell('input keyevent KEYCODE_WAKEUP')
 
-    def pageDownScroll(self):       # 개발 전
+    def pageDownScroll(self):       # 튜닝 전
         print('Driver@pageDownScroll: page down start')
+        for device in self.devices:
+            # set start, end pos
+            size = device.wm_size()
+            start_x = int(size.width/2)
+            start_y = int(size.height*0.7)
+            end_x = start_x
+            end_y = int(size.height*0.3)
+            # swipe
+            device.input_swipe(start_x, start_y, end_x, end_y, 1000)
 
-    def dumpstate(self):            # 개발 전
+    def findLogPath(self, dumpLog=""):
+        logs = dumpLog.split('\n')
+        for log in logs:
+            if "Log path:" in log:
+                log = log.split(' ')
+                for word in log:
+                    if ".txt" in word:
+                        return word
+        return ""
+
+    def dumpstate(self):            # 테스트 전
         print('Driver@dumpstate: dumpstate start')
-        
+        ret = []
+        for device in self.devices:
+            dumpLog = device.shell('dumpstate')
+            ret.append(self.findLogPath(dumpLog))
+        return ret
+
+    def pull(self, src, dst):
+        print('Driver@pull: pull from ' + src + ' to ' + dst)
+        for device in self.devices:
+            device.pull(src, dst)
+
     def sleep(self, time=0.1):
         print('Driver@sleep: sleep ' + str(time))
         for device in self.devices:
