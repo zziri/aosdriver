@@ -37,6 +37,7 @@ for driver in drivers:
     thread = Thread(target=fulldumpstate, args=(driver, ))
     thread.daemon = True
     thread.start()
+# fulldumpstate(drivers[0])
 
 while True:
     if count == 0:

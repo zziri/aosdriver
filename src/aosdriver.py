@@ -33,6 +33,7 @@ class Driver:
         # path 가져와서 할 것 추가해야함
         words = self.device.shell('uiautomator dump')
         path = ""
+        words = words.split(' ')
         for word in words:
             if '.xml' in word:
                 path = word
