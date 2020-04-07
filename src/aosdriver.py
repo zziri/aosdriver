@@ -31,11 +31,14 @@ class Driver:
 
     def getXml(self):
         # path 가져와서 할 것 추가해야함
-        str = self.device.shell('uiautomator dump')
-        path = '/sdcard/window_dump.xml'
+        words = self.device.shell('uiautomator dump')
+        path = ""
+        for word in words:
+            if '.xml' in word:
+                path = word
+                break
         return self.device.shell('cat ' + path)
 
-    # 테스트 필요
     def findNode(self, root, key, value):
         q = Queue()
         q.put(root)
