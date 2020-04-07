@@ -13,7 +13,7 @@ def getDevices(host='127.0.0.1', port=5037):
     return client.devices()
 
 def waitForDevice():
-    print('Driver@waitForDevice: waiting for devices...')
+    print('aosdriver@waitForDevice: waiting for devices...')
     os.popen('adb wait-for-device').read()  # read() 해줘야 대기함
 
 
@@ -27,7 +27,7 @@ class ActivityPath:
 class Driver:
     def __init__(self, device):
         self.device = device
-        print('Driver@__init__: create')
+        print('{}: Driver@__init__: create'.format(self.device.serial))
 
     def getXml(self):
         # path 가져와서 할 것 추가해야함
@@ -57,6 +57,7 @@ class Driver:
         return ret
 
     def clickByXml(self, key, value):
+        print('{}: Driver@clickByXml: click "{}"'.format(self.device.serial, value))
         # xml dump
         xml = self.getXml()
         # make tree
@@ -83,7 +84,7 @@ class Driver:
         self.device.input_keyevent('KEYCODE_WAKEUP')
 
     def pageDownScroll(self):       # 튜닝 전
-        print('Driver@pageDownScroll: page down start')
+        print('{}: Driver@pageDownScroll: page down start'.format(self.device.serial))
         # set start, end pos
         size = self.device.wm_size()
         start_x = int(size.width/2)
@@ -104,26 +105,26 @@ class Driver:
         return ""
 
     def dumpstate(self):            # 테스트 전
-        print('Driver@dumpstate: dumpstate start')
+        print('{}: Driver@dumpstate: dumpstate start'.format(self.device.serial))
         dumpLog = self.device.shell('dumpstate')
         return self.findLogPath(dumpLog)
 
     def pull(self, src, dst):
-        print('Driver@pull: pull from ' + src + ' to ' + dst)
+        print('{}: Driver@pull: pull from '.format(self.device.serial) + src + ' to ' + dst)
         os.popen('adb -s {} pull {} {}'.format(self.device.serial, src, dst)).read()
 
     def sleep(self, time=0.1):
-        print('Driver@sleep: sleep ' + str(time))
+        print('{}: Driver@sleep: sleep '.format(self.device.serial) + str(time))
         self.device.shell('sleep ' + str(time))
 
     def sendKey(self, key=""):
-        print('Driver@sendKey: send ' + key)
+        print('{}: Driver@sendKey: send '.format(self.device.serial) + key)
         self.device.shell('input text ' + key)
 
     def waitByXml(self):
         prev = self.getXml()
         next = prev
-        print('Driver@waitByXmlThread: [{}] wait for change window'.format(self.device.serial))
+        print('{}: Driver@waitByXml: wait for change window'.format(self.device.serial))
         while next == prev:
             next = self.getXml()
             sleep(0.5)
