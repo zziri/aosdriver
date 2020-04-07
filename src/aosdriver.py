@@ -4,28 +4,36 @@ from xml.etree import ElementTree
 import os
 import re
 from queue import Queue
+from time import sleep
+
+
+def getDevices(host='127.0.0.1', port=5037):
+    client = Client(host, port)
+    waitForDevice()
+    return client.devices()
+
+def waitForDevice():
+    print('Driver@waitForDevice: waiting for devices...')
+    os.popen('adb wait-for-device').read()  # read() 해줘야 대기함
 
 
 class ActivityPath:
     SETTINGS_ACTIVITY_PATH = "com.android.settings/com.android.settings.Settings"
+    CCICLPM_ACTIVITY_PATH = "com.sec.android.app.factorykeystring/com.sec.android.app.status.CCIC_LPM"
+    SYSDUMP_ACTIVITY_PATH = "com.sec.android.app.servicemodeapp/.SysDump"
+    DIAL_ACTIVITY_PATH = "com.samsung.android.dialer/.DialtactsActivity"
 
 
 class Driver:
-    def __init__(self, host='127.0.0.1', port=5037):
-        client = Client(host, port)
-        self.waitForDevice()
-        self.devices = client.devices()
-        print('Driver@__init__: start driver')
+    def __init__(self, device):
+        self.device = device
+        print('Driver@__init__: create')
 
-    def waitForDevice(self):
-        print('Driver@waitForDevice: waiting for devices...')
-        os.popen('adb wait-for-device').read()  # read() 해줘야 대기함
-
-    def getXml(self, device):
+    def getXml(self):
         # path 가져와서 할 것 추가해야함
-        str = device.shell('uiautomator dump')
+        str = self.device.shell('uiautomator dump')
         path = '/sdcard/window_dump.xml'
-        return device.shell('cat ' + path)
+        return self.device.shell('cat ' + path)
 
     # 테스트 필요
     def findNode(self, root, key, value):
@@ -41,20 +49,6 @@ class Driver:
                 q.put(nxt)
         return None
 
-    # 위에 함수로 대체할 것임
-    # def findNode(self, tree, key, value):
-    #     q = list()
-    #     q.append(tree)
-    #     while q:
-    #         cur = q.pop(0)
-    #         if cur.tag == 'node':
-    #             if cur.attrib[key] == value:
-    #                 return cur
-    #         nexts = cur.findall('node')
-    #         for nxt in nexts:
-    #             q.append(nxt)
-    #     return None
-
     def getBoundPos(self, node):
         ret = []
         pos = re.findall('\d+', node.attrib['bounds'])
@@ -63,46 +57,41 @@ class Driver:
         return ret
 
     def clickByXml(self, key, value):
-        for device in self.devices:
-            # xml dump
-            xml = self.getXml(device)
-            # make tree
-            tree = ElementTree.fromstring(xml)
-            # find node
-            node = self.findNode(tree, key, value)
-            if node == None:
-                return False
-            # find position
-            pos = self.getBoundPos(node)
-            # touch
-            device.shell('input tap {} {}'.format(pos[0], pos[1]))
-
+        # xml dump
+        xml = self.getXml()
+        # make tree
+        tree = ElementTree.fromstring(xml)
+        # find node
+        node = self.findNode(tree, key, value)
+        if node == None:
+            return False
+        # find position
+        pos = self.getBoundPos(node)
+        # touch
+        self.device.shell('input tap {} {}'.format(pos[0], pos[1]))
         return True
 
     def startMainActivity(self, path):
-        for device in self.devices:
-            str = device.shell('am start -a android.intent.action.MAIN -n ' + path)
-            print(device.serial + ': ' + str)
+        str = self.device.shell('am start -a android.intent.action.MAIN -n ' + path)
+        print(self.device.serial + ': ' + str)
 
     def home(self):
-        for device in self.devices:
-            device.shell('input keyevent KEYCODE_HOME')
+        self.device.shell('input keyevent KEYCODE_HOME')
 
-    def wakeup(self):
-        for device in self.devices:
-            device.shell('input keyevent KEYCODE_WAKEUP')
+    def wakeUp(self):
+        # device.shell('input keyevent KEYCODE_WAKEUP')
+        self.device.input_keyevent('KEYCODE_WAKEUP')
 
     def pageDownScroll(self):       # 튜닝 전
         print('Driver@pageDownScroll: page down start')
-        for device in self.devices:
-            # set start, end pos
-            size = device.wm_size()
-            start_x = int(size.width/2)
-            start_y = int(size.height*0.7)
-            end_x = start_x
-            end_y = int(size.height*0.3)
-            # swipe
-            device.input_swipe(start_x, start_y, end_x, end_y, 1000)
+        # set start, end pos
+        size = self.device.wm_size()
+        start_x = int(size.width/2)
+        start_y = int(size.height*0.7)
+        end_x = start_x
+        end_y = int(size.height*0.3)
+        # swipe
+        self.device.input_swipe(start_x, start_y, end_x, end_y, 1000)
 
     def findLogPath(self, dumpLog=""):
         logs = dumpLog.split('\n')
@@ -116,26 +105,28 @@ class Driver:
 
     def dumpstate(self):            # 테스트 전
         print('Driver@dumpstate: dumpstate start')
-        ret = []
-        for device in self.devices:
-            dumpLog = device.shell('dumpstate')
-            ret.append(self.findLogPath(dumpLog))
-        return ret
+        dumpLog = self.device.shell('dumpstate')
+        return self.findLogPath(dumpLog)
 
     def pull(self, src, dst):
         print('Driver@pull: pull from ' + src + ' to ' + dst)
-        for device in self.devices:
-            device.pull(src, dst)
+        os.popen('adb -s {} pull {} {}'.format(self.device.serial, src, dst)).read()
 
     def sleep(self, time=0.1):
         print('Driver@sleep: sleep ' + str(time))
-        for device in self.devices:
-            device.shell('sleep ' + str(time))
+        self.device.shell('sleep ' + str(time))
 
     def sendKey(self, key=""):
         print('Driver@sendKey: send ' + key)
-        for device in self.devices:
-            device.shell('input text ' + key)
+        self.device.shell('input text ' + key)
+
+    def waitByXml(self):
+        prev = self.getXml()
+        next = prev
+        print('Driver@waitByXmlThread: [{}] wait for change window'.format(self.device.serial))
+        while next == prev:
+            next = self.getXml()
+            sleep(0.5)
 
 
 

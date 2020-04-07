@@ -1,9 +1,8 @@
 
-from aosdriver import Driver
-from aosdriver import ActivityPath
+from aosdriver import *
 
-driver = Driver()
-driver.wakeup()
-paths = driver.dumpstate()
-print(paths)
-driver.pull(paths[0], '/home/jihoon/Documents/klog/fastdumpstate.lst')
+client = Client()
+devices = client.devices()
+driver = Driver(devices[0])
+
+print(driver.getXml())
