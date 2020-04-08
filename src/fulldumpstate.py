@@ -27,6 +27,7 @@ def fulldumpstate(driver):
     driver.clickByXml('text', 'OK')
     driver.pull('/sdcard/log', '/home/jihoon/Documents/klog/autodumpstate/')
     driver.home()
+    driver.powerBtn()
 
     lock.acquire()
     count -= 1

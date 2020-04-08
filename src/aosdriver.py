@@ -81,11 +81,14 @@ class Driver:
         print(self.device.serial + ': ' + str)
 
     def home(self):
-        self.device.shell('input keyevent KEYCODE_HOME')
+        self.device.input_keyevent('KEYCODE_HOME')
+        # self.device.shell('input keyevent KEYCODE_HOME')
 
     def wakeUp(self):
-        # device.shell('input keyevent KEYCODE_WAKEUP')
         self.device.input_keyevent('KEYCODE_WAKEUP')
+
+    def powerBtn(self):
+        self.device.input_keyevent('KEYCODE_POWER')
 
     def pageDownScroll(self):       # 튜닝 전
         print('{}: Driver@pageDownScroll: page down start'.format(self.device.serial))
