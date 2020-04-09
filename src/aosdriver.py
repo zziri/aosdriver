@@ -78,7 +78,7 @@ class Driver:
         return True
 
     def clickByXmlWait(self, key, value):
-        print('{}: Driver@clickByXmlWait: click "{}"'.format(self.device.serial, value))
+        print('{}: Driver@clickByXmlWait: find "{}"'.format(self.device.serial, value))
         while True:
             xml = self.getXml()
             tree = ElementTree.fromstring(xml)
@@ -88,6 +88,7 @@ class Driver:
             else:
                 break
         pos = self.getBoundPos(node)
+        print('{}: Driver@clickByXmlWait: click "{}"'.format(self.device.serial, value))
         self.device.shell('input tap {} {}'.format(pos[0], pos[1]))
         self.sleep()
 
