@@ -74,21 +74,42 @@ class Driver:
         pos = self.getBoundPos(node)
         # touch
         self.device.shell('input tap {} {}'.format(pos[0], pos[1]))
+        self.sleep()
         return True
 
+    def clickByXmlWait(self, key, value):
+        print('{}: Driver@clickByXmlWait: click "{}"'.format(self.device.serial, value))
+        while True:
+            xml = self.getXml()
+            tree = ElementTree.fromstring(xml)
+            node = self.findNode(tree, key, value)
+            if node == None:
+                continue
+            else:
+                break
+        pos = self.getBoundPos(node)
+        self.device.shell('input tap {} {}'.format(pos[0], pos[1]))
+        self.sleep()
+
+
     def startMainActivity(self, path):
-        str = self.device.shell('am start -a android.intent.action.MAIN -n ' + path)
-        print(self.device.serial + ': ' + str)
+        print('{}: Driver@startMainActivity: start main activity {}'.format(self.device.serial, path))
+        self.device.shell('am start -a android.intent.action.MAIN -n ' + path)
+        # print(self.device.serial + ': ' + str)
+        self.sleep()
 
     def home(self):
         self.device.input_keyevent('KEYCODE_HOME')
+        self.sleep()
         # self.device.shell('input keyevent KEYCODE_HOME')
 
     def wakeUp(self):
         self.device.input_keyevent('KEYCODE_WAKEUP')
+        self.sleep()
 
     def powerBtn(self):
         self.device.input_keyevent('KEYCODE_POWER')
+        self.sleep()
 
     def pageDownScroll(self):       # 튜닝 전
         print('{}: Driver@pageDownScroll: page down start'.format(self.device.serial))
@@ -100,6 +121,7 @@ class Driver:
         end_y = int(size.height*0.3)
         # swipe
         self.device.input_swipe(start_x, start_y, end_x, end_y, 1000)
+        self.sleep()            # 적당한 sleep 튜닝해야함
 
     def findLogPath(self, dumpLog=""):
         logs = dumpLog.split('\n')
@@ -121,12 +143,17 @@ class Driver:
         os.popen('adb -s {} pull {} {}'.format(self.device.serial, src, dst)).read()
 
     def sleep(self, time=0.1):
-        print('{}: Driver@sleep: sleep '.format(self.device.serial) + str(time))
+        print('{}: Driver@sleep: host sleep {} sec'.format(self.device.serial, str(time)))
+        sleep(time)
+
+    def sleepDevice(self, time=0.1):
+        print('{}: Driver@sleepDevice: device sleep {} sec'.format(self.device.serial, str(time)))
         self.device.shell('sleep ' + str(time))
 
     def sendKey(self, key=""):
         print('{}: Driver@sendKey: send '.format(self.device.serial) + key)
         self.device.shell('input text ' + key)
+        self.sleep()
 
     def waitByXml(self):
         prev = self.getXml()
@@ -134,7 +161,7 @@ class Driver:
         print('{}: Driver@waitByXml: wait for change window'.format(self.device.serial))
         while next == prev:
             next = self.getXml()
-            sleep(0.5)
+            # sleep(0.1)
 
 
 
