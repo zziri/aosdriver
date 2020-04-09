@@ -143,11 +143,11 @@ class Driver:
         os.popen('adb -s {} pull {} {}'.format(self.device.serial, src, dst)).read()
 
     def sleep(self, time=0.1):
-        print('{}: Driver@sleep: host sleep {} sec'.format(self.device.serial, str(time)))
+        # print('{}: Driver@sleep: host sleep {} sec'.format(self.device.serial, str(time)))
         sleep(time)
 
     def sleepDevice(self, time=0.1):
-        print('{}: Driver@sleepDevice: device sleep {} sec'.format(self.device.serial, str(time)))
+        # print('{}: Driver@sleepDevice: device sleep {} sec'.format(self.device.serial, str(time)))
         self.device.shell('sleep ' + str(time))
 
     def sendKey(self, key=""):
