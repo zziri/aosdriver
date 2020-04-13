@@ -1,0 +1,2 @@
+#!/bin/bash
+python ~/Work/PythonProjects/aosdriver/src/deletedumpstate.py

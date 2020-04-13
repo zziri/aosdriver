@@ -21,6 +21,7 @@ def deldumpstate(driver):
     driver.clickByXmlWait('text', 'OK')
     driver.home(), driver.home()
     driver.powerBtn()
+    # critical section
     global count
     lock.acquire()
     count -= 1
