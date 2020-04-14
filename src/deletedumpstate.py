@@ -1,6 +1,7 @@
 
 from aosdriver import *
 from threading import *
+from lib import *
 
 devices = getDevices()
 drivers = []

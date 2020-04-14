@@ -1,20 +1,9 @@
 
 from ppadb.client import Client
 from xml.etree import ElementTree
-import os
 import re
 from queue import Queue
 from time import sleep
-
-
-def getDevices(host='127.0.0.1', port=5037):
-    client = Client(host, port)
-    waitForDevice()
-    return client.devices()
-
-def waitForDevice():
-    print('aosdriver@waitForDevice: waiting for devices...')
-    os.popen('adb wait-for-device').read()  # read() 해줘야 대기함
 
 
 class ActivityPath:
