@@ -4,6 +4,7 @@ from xml.etree import ElementTree
 import re
 from queue import Queue
 from time import sleep
+import os
 
 
 class ActivityPath:
