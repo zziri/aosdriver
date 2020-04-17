@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html>
 
-<head>
-    <meta charset="utf-8">
-</head>
+# aosdriver
 
-<body>
-    <h1>aosdriver</h1>
-    <hr>
-    <ul>1
-        <ul>2</ul>
-    </ul>
-</body>
+## 개요
 
-</html>
+adb를 이용해 samsung galaxy device를 원격제어하는 클래스와 그를 이용한 자동화 예제입니다.
