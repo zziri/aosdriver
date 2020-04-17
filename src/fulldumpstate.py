@@ -13,6 +13,7 @@ count = len(drivers)
 
 
 def fulldumpstate(driver):
+    BUILD_KEY = "ro.build.version.incremental"
     # sequence
     global count
     driver.wakeUp()
@@ -24,7 +25,10 @@ def fulldumpstate(driver):
     driver.clickByXmlWait('text', 'OK')
     driver.clickByXmlWait('text', 'Copy to sdcard(include CP Ramdump)')
     driver.clickByXmlWait('text', 'OK')
-    driver.pull('/sdcard/log', '/home/jihoon/Documents/klog/autodumpstate/')
+    build = driver.getprop(BUILD_KEY)
+    dst = superChdir('home/jihoon/Documents/dumpstate/{}'.format(build))
+    src = '/sdcard/log'
+    driver.pull(src, dst)
     driver.home(), driver.home()
     driver.powerBtn()
 

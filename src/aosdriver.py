@@ -20,7 +20,6 @@ class Driver:
         print('{}: Driver@__init__: create'.format(self.device.serial))
 
     def getXml(self):
-        # path 가져와서 할 것 추가해야함
         words = self.device.shell('uiautomator dump')
         path = ""
         words = words.split(' ')
@@ -153,6 +152,13 @@ class Driver:
         while next == prev:
             next = self.getXml()
             # sleep(0.1)
+
+    def getprop(self, key=""):
+        print('{}: Driver@getprop: get system property'.format(self.device.serial))
+        return self.device.shell('getprop {}'.format(key))
+
+
+
 
 
 
