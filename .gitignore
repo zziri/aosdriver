@@ -1,2 +1,5 @@
 .idea
-src/__pycache__
+exec
+src/**
+!src/aosdriver.py
+!src/lib.py
