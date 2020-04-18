@@ -9,8 +9,6 @@ import os
 
 class ActivityPath:
     SETTINGS_ACTIVITY_PATH = "com.android.settings/com.android.settings.Settings"
-    CCICLPM_ACTIVITY_PATH = "com.sec.android.app.factorykeystring/com.sec.android.app.status.CCIC_LPM"
-    SYSDUMP_ACTIVITY_PATH = "com.sec.android.app.servicemodeapp/.SysDump"
     DIAL_ACTIVITY_PATH = "com.samsung.android.dialer/.DialtactsActivity"
 
 

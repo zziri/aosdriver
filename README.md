@@ -1,9 +1,7 @@
 
 # aosdriver
 
-## 개요
-
-adb를 이용해 samsung galaxy device를 원격제어하는 클래스와 그를 이용한 자동화 예제입니다.
+adb(안드로이드 디버그 브릿지)를 이용해 안드로이드 디바이스를 원격제어 및 자동화할 수 있는 클래스를 개발합니다.
 
 ## 테스트한 단말기
 
@@ -14,6 +12,8 @@ adb를 이용해 samsung galaxy device를 원격제어하는 클래스와 그를
 ## Source Code
 
 ### aosdriver.py
+
+
 
 ### lib.py
 
