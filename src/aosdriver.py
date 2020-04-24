@@ -83,13 +83,11 @@ class Driver:
     def startMainActivity(self, path):
         print('{}: Driver@startMainActivity: start main activity {}'.format(self.device.serial, path))
         self.device.shell('am start -a android.intent.action.MAIN -n ' + path)
-        # print(self.device.serial + ': ' + str)
         self.sleep()
 
     def home(self):
         self.device.input_keyevent('KEYCODE_HOME')
         self.sleep()
-        # self.device.shell('input keyevent KEYCODE_HOME')
 
     def wakeUp(self):
         self.device.input_keyevent('KEYCODE_WAKEUP')
@@ -131,11 +129,9 @@ class Driver:
         os.popen('adb -s {} pull {} {}'.format(self.device.serial, src, dst)).read()
 
     def sleep(self, time=0.1):
-        # print('{}: Driver@sleep: host sleep {} sec'.format(self.device.serial, str(time)))
         sleep(time)
 
     def sleepDevice(self, time=0.1):
-        # print('{}: Driver@sleepDevice: device sleep {} sec'.format(self.device.serial, str(time)))
         self.device.shell('sleep ' + str(time))
 
     def sendKey(self, key=""):
