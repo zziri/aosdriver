@@ -89,6 +89,10 @@ class Driver:
         self.device.input_keyevent('KEYCODE_HOME')
         self.sleep()
 
+    def menu(self):
+        self.device.input_keyevent("KEYCODE_MENU")
+        self.sleep()
+
     def wakeUp(self):
         self.device.input_keyevent('KEYCODE_WAKEUP')
         self.sleep()
@@ -148,7 +152,7 @@ class Driver:
             # sleep(0.1)
 
     def getprop(self, key=""):
-        print('{}: Driver@getprop: get system property'.format(self.device.serial))
+        print('{}: Driver@getprop: get system property: {}'.format(self.device.serial, key))
         return self.device.shell('getprop {}'.format(key))
 
 
