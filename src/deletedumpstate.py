@@ -15,6 +15,7 @@ count = len(drivers)
 def deldumpstate(driver):
     # sequence
     driver.wakeUp()
+    driver.menu()
     driver.home()
     driver.startMainActivity(ActivityPath.DIAL_ACTIVITY_PATH)
     driver.clickByXmlWait('resource-id', "com.samsung.android.dialer:id/dialpad_tab_button")
