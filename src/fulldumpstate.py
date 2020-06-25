@@ -23,9 +23,11 @@ def fulldumpstate(driver):
     driver.clickByXmlWait('resource-id', "com.samsung.android.dialer:id/dialpad_tab_button")
     driver.sendKey('*#9900#')
     driver.clickByXmlWait('text', 'Run dumpstate/logcat')
-    driver.clickByXmlWait('text', 'OK')
+    # driver.clickByXmlWait('text', 'OK')
+    driver.clickByXmlWaitOr('text', ['OK', '확인'])
     driver.clickByXmlWait('text', 'Copy to sdcard(include CP Ramdump)')
-    driver.clickByXmlWait('text', 'OK')
+    # driver.clickByXmlWait('text', 'OK')
+    driver.clickByXmlWaitOr('text', ['OK', '확인'])
     build = driver.getprop(BUILD_KEY)
     dst = superChdir('~/Documents/dumpstate/{}'.format(build))
     src = '/sdcard/log'

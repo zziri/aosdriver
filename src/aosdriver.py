@@ -40,6 +40,20 @@ class Driver:
                 q.put(nxt)
         return None
 
+    def findNodeOr(self, root, key, value=[]):
+        q = Queue()
+        q.put(root)
+        while q.qsize():
+            cur = q.get()
+            if cur.tag == 'node':
+                for val in value:
+                    if cur.attrib[key] == val:
+                        return cur
+            nexts = cur.findall('node')
+            for nxt in nexts:
+                q.put(nxt)
+        return None
+
     def getBoundPos(self, node):
         ret = []
         pos = re.findall('\d+', node.attrib['bounds'])
@@ -63,6 +77,21 @@ class Driver:
         self.device.shell('input tap {} {}'.format(pos[0], pos[1]))
         self.sleep()
         return True
+
+    def clickByXmlWaitOr(self, key, value=[]):
+        print('{}: Driver@clickByXmlWaitOr: find "{}"'.format(self.device.serial, value))
+        while True:
+            xml = self.getXml()
+            tree = ElementTree.fromstring(xml)
+            node = self.findNodeOr(tree, key, value)
+            if node == None:
+                continue
+            else:
+                break
+        pos = self.getBoundPos(node)
+        print('{}: Driver@clickByXmlWait: click "{}"'.format(self.device.serial, value))
+        self.device.shell('input tap {} {}'.format(pos[0], pos[1]))
+        self.sleep()
 
     def clickByXmlWait(self, key, value):
         print('{}: Driver@clickByXmlWait: find "{}"'.format(self.device.serial, value))

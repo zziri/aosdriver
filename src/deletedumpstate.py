@@ -21,7 +21,8 @@ def deldumpstate(driver):
     driver.clickByXmlWait('resource-id', "com.samsung.android.dialer:id/dialpad_tab_button")
     driver.sendKey('*#9900#')
     driver.clickByXmlWait('text', 'Delete dumpstate/logcat')
-    driver.clickByXmlWait('text', 'OK')
+    # driver.clickByXmlWait('text', 'OK')
+    driver.clickByXmlWaitOr('text', ['OK', '확인'])
     driver.home(), driver.home()
     driver.powerBtn()
     # critical section
