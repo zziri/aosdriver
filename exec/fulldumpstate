@@ -1,2 +1,2 @@
 #!/bin/bash
-python ~/Work/PythonProjects/aosdriver/src/fulldumpstate.py
+python3 ~/Work/PythonProjects/aosdriver/src/fulldumpstate.py
