@@ -185,8 +185,8 @@ class Driver:
         return self.device.shell('getprop {}'.format(key))
 
 
-
-
-
-
-
+    def delete_file(self, path=""):
+        # 아직 테스트 안함
+        print('{}: Driver@delete_file: delete file: {}'.format(self.device.serial, path))
+        self.device.shell('rm -rf {}'.format(path))
+        return True

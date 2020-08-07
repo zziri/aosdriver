@@ -25,6 +25,7 @@ def deldumpstate(driver):
     driver.clickByXmlWaitOr('text', ['OK', '확인'])
     driver.home(), driver.home()
     driver.powerBtn()
+    driver.delete_file('/sdcard/log')
     # critical section
     global count
     lock.acquire()
