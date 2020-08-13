@@ -33,9 +33,8 @@ class Driver:
         while q.qsize():
             cur = q.get()
             if cur.tag == 'node':
-                cur_node_value = cur.attrib[key]
-                if cur_node_value:
-                    if cur.attrib[key] == value:
+                if cur.attrib.get(key):
+                    if cur.attrib[key].strip() == value:
                         return cur
             nexts = cur.findall('node')
             for nxt in nexts:
@@ -48,10 +47,9 @@ class Driver:
         while q.qsize():
             cur = q.get()
             if cur.tag == 'node':
-                cur_node_value = cur.attrib[key]
-                if cur_node_value:
+                if cur.attrib.get(key):
                     for val in value:
-                        if cur_node_value == val:
+                        if cur.attrib[key].strip() == val:
                             return cur
             nexts = cur.findall('node')
             for nxt in nexts:
