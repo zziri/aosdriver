@@ -186,9 +186,14 @@ class Driver:
         print('{}: Driver@getprop: get system property: {}'.format(self.device.serial, key))
         return self.device.shell('getprop {}'.format(key))
 
-
     def delete_file(self, path=""):
         # 아직 테스트 안함
         print('{}: Driver@delete_file: delete file: {}'.format(self.device.serial, path))
         self.device.shell('rm -rf {}'.format(path))
         return True
+
+    def read_file(self, path=""):
+        print('{}: Driver@read_file: read file: {}'.format(self.device.serial, path))
+        content = self.device.shell('grep ".*" {}'.format(path))
+        print('{}: Driver@read_file: content:\n{}'.format(self.device.serial, content))
+        return content

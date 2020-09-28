@@ -1,4 +1,6 @@
 
-from lib import *
+import sys
 
-print(superChdir('~/Documents'))
+
+for item in sys.argv:
+    print(item)
