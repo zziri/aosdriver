@@ -193,7 +193,4 @@ class Driver:
         return True
 
     def read_file(self, path=""):
-        print('{}: Driver@read_file: read file: {}'.format(self.device.serial, path))
-        content = self.device.shell('grep ".*" {}'.format(path))
-        print('{}: Driver@read_file: content:\n{}'.format(self.device.serial, content))
-        return content
+        return self.device.shell('grep ".*" {}'.format(path))
